@@ -82,7 +82,6 @@ func doInitialize(db *sql.DB) error {
 		fmt.Printf("stmt.Exec error: %v\n", err)
 	}
 
-	defer stmt.Close()
 
 	return nil
 	}
