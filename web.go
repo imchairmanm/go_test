@@ -33,7 +33,7 @@ func database(res http.ResponseWriter, req *http.Request) {
 	var err error
 	dokku_db := os.Getenv("DATABASE_URL")
 
-	db, err = sql.Open("postgres", dokku_db)
+	db, err = sql.Open("postgres", dokku_db + "?sslmode=disable")
 	if err != nil {
 		fmt.Printf("sql.Open error: %v\n", err)
 		return
