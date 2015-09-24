@@ -1,11 +1,11 @@
 package main
 
 import (
-	"os"
-	"fmt"
-	"net/http"
-	_ "github.com/lib/pq"
 	"database/sql"
+	"fmt"
+	_ "github.com/lib/pq"
+	"net/http"
+	"os"
 )
 
 var selectStatement = `
@@ -27,13 +27,13 @@ func main() {
 
 func database(res http.ResponseWriter, req *http.Request) {
 
-//	fmt.Fprintln(res, "testing...\n")
+	//	fmt.Fprintln(res, "testing...\n")
 
 	var db *sql.DB
 	var err error
 	dokku_db := os.Getenv("DATABASE_URL")
 
-	db, err = sql.Open("postgres", dokku_db)
+	db, err = sql.Open("postgres", dokku_db+"?sslmode=disable")
 	if err != nil {
 		fmt.Printf("sql.Open error: %v\n", err)
 		return
@@ -63,7 +63,6 @@ func doInitialize(db *sql.DB) error {
 		return err
 	}
 
-
 	_, err = stmt.Exec()
 	if err != nil {
 		fmt.Printf("stmt.Exec error: %v\n", err)
@@ -82,10 +81,8 @@ func doInitialize(db *sql.DB) error {
 		fmt.Printf("stmt.Exec error: %v\n", err)
 	}
 
-
 	return nil
-	}
-
+}
 
 func doSelect(res http.ResponseWriter, db *sql.DB) error {
 	var stmt *sql.Stmt
@@ -105,7 +102,6 @@ func doSelect(res http.ResponseWriter, db *sql.DB) error {
 		return err
 	}
 
-
 	defer stmt.Close()
 
 	for rows.Next() {
@@ -118,8 +114,8 @@ func doSelect(res http.ResponseWriter, db *sql.DB) error {
 			return err
 		}
 
-		fmt.Fprintln(res, "firstname: "+firstname+"    lastname: "+lastname+"\n");
-		}
-
-		return nil
+		fmt.Fprintln(res, "firstname: "+firstname+"    lastname: "+lastname+"\n")
 	}
+
+	return nil
+}
